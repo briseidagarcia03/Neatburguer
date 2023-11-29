@@ -1,0 +1,29 @@
+﻿@model Neatburguer.Models.ViewModels.MenuViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<section class="menu3">
+
+    <div>
+        <h1>NUESTRO MENÚ</h1>
+        @foreach(var item in Model.Hamburguesas)
+        {
+            <h3>@item.Key</h3>
+            foreach(var h in item)
+            {
+                 <h2 class="seleccionado">
+                     <a href="~/Menu/@h.Nombre.Replace(" ","-")">
+                         <span>@h.Nombre</span> <span class="price">@h.Precio.ToString("C")</span>
+                     </a>
+                 </h2>
+            }
+        }
+    </div>
+    <div>
+        <img src="~/hamburguesas/@(Model.Hamburguesa.Id).png" />
+        <p>@Model.Hamburguesa.Descripcion</p>
+    </div>
+</section>
+
