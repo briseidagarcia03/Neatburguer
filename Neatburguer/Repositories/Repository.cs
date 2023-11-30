@@ -14,5 +14,37 @@ namespace Neatburguer.Repositories
         {
             return Context.Set<T>();
         }
+
+        public virtual T? Get(object Id)
+        {
+            return Context.Find<T>(Id);
+        }
+
+        public virtual void Insert(T entity)
+        {
+            Context.Add(entity);
+            Context.SaveChanges();
+        }
+
+        public virtual void Update(T entity)
+        {
+            Context.Update(entity);
+            Context.SaveChanges();
+        }
+
+        public virtual void Delete(T entity)
+        { 
+            Context.Remove(entity);
+            Context.SaveChanges();
+        }
+
+        public virtual void Delete(object Id)
+        {
+            var entity = Get(Id);
+            if(entity != null)
+            {
+                Delete(entity);   
+            }
+        }
     }
 }

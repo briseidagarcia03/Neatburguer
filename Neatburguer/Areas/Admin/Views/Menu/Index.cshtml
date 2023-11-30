@@ -1,0 +1,33 @@
+﻿@model IEnumerable<IGrouping<string, Neatburguer.Areas.Admin.Models.ViewModels.MenuAdminViewModel>>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+
+<section class="menu2">
+    @foreach(var item in Model)
+    {
+        <h1>@item.Key</h1>
+        @foreach (var i in item)
+        {
+            <div>
+                <img src="~/hamburguesas/@(i.Id).png" />
+                <h1>@i.Nombre</h1>
+                <h2><del>@i.PrecioPromocion.ToString("C")</del><br />@i.Precio.ToString("C")</h2>
+                <p>
+                    @i.Descripcion
+                </p>
+
+                <span class="acciones">
+                    <a href="~/Admin/menu/editar/@i.Id">Editar</a>
+                    <a href="~/Admin/menu/eliminar/@i.Id">Eliminar</a>
+                    <a href="quitarpromocion.html">Quitar promoción</a>
+
+                </span>
+            </div>
+        }
+       
+    }
+
+    <a class="fab" href="~/Admin/menu/agregarhambu">+</a>
+</section>

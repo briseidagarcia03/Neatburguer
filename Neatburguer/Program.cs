@@ -20,10 +20,11 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseFileServer();
+
+app.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+
 app.MapDefaultControllerRoute();
 app.Run();
-
-//app.MapControllerRoute(
-//      name: "areas",
-//      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-//    );
