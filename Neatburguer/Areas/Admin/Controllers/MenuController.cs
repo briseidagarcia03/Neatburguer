@@ -20,15 +20,15 @@ namespace Neatburguer.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var vm = menuRepository.GetAll().Select(x => new MenuAdminViewModel
-                {
-                    Id = x.Id,
-                    Nombre = x.Nombre,
-                    Descripcion = x.Descripción,
-                    Precio = x.Precio,
-                    PrecioPromocion = x.PrecioPromocion ?? 0,
-                    Clasificacion = x.IdClasificacionNavigation.Nombre
-                }).GroupBy(x => x.Clasificacion);
-                return View(vm);
+            {
+                Id = x.Id,
+                Nombre = x.Nombre,
+                Descripcion = x.Descripción,
+                Precio = (decimal)x.Precio,
+                PrecioPromocion = (decimal)(x.PrecioPromocion ?? 0),
+                Clasificacion = x.IdClasificacionNavigation.Nombre
+            }).GroupBy(x => x.Clasificacion);
+            return View(vm);
         }
 
         //cargar las clasificaciones
@@ -50,7 +50,7 @@ namespace Neatburguer.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AgregarHambu(AggHambuViewModel vm)
         {
-            if(vm.Img != null)
+            if (vm.Img != null)
             {
                 if (vm.Img.ContentType != "image/png")
                 {
@@ -82,24 +82,24 @@ namespace Neatburguer.Areas.Admin.Controllers
                 {
                     Nombre = vm.Nombre,
                     Descripción = vm.Descripcion,
-                    Precio = vm.Precio,
+                    Precio = (double)vm.Precio,
                     IdClasificacion = vm.IdClasificacion,
                 };
                 menuRepository.Insert(hambu);
-                if(vm.Img == null)
+                if (vm.Img == null)
                 {
                     System.IO.File.Copy("wwwroot/images/burger.png", $"wwwroot/hamburguesas/{hambu.Id}.png");
                 }
                 else
                 {
                     System.IO.FileStream fs = System.IO.File.Create($"wwwroot/hamburguesas/{hambu.Id}.png");
-                    vm.Img.CopyTo( fs );
+                    vm.Img.CopyTo(fs);
                     fs.Close();
                 }
-                return RedirectToAction("Index","Menu", new {area = "Admin"});
+                return RedirectToAction("Index", "Menu", new { area = "Admin" });
             }
             return View(vm);
-            
+
         }
 
         public IActionResult Editar(int id)
@@ -110,7 +110,7 @@ namespace Neatburguer.Areas.Admin.Controllers
                 Id = x.Id,
                 Nombre = x.Nombre,
             });
-            if(hambu == null)
+            if (hambu == null)
             {
                 return RedirectToAction("Index", "Menu", new { area = "Admin" });
             }
@@ -121,13 +121,13 @@ namespace Neatburguer.Areas.Admin.Controllers
                     Id = hambu.Id,
                     Nombre = hambu.Nombre,
                     Descripcion = hambu.Descripción,
-                    Precio = hambu.Precio,
+                    Precio = (decimal)hambu.Precio,
                     IdClasificacion = hambu.IdClasificacion,
                     ListaClasificaciones = clasi
                 };
                 return View(vm);
             }
-          
+
         }
 
         [HttpPost]
@@ -162,14 +162,14 @@ namespace Neatburguer.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var hambu = menuRepository.Get(vm.Id);
-                if(hambu == null)
+                if (hambu == null)
                 {
                     return RedirectToAction("Index", "Menu", new { area = "Admin" });
                 }
 
                 hambu.Nombre = vm.Nombre;
                 hambu.Descripción = vm.Descripcion;
-                hambu.Precio = vm.Precio;
+                hambu.Precio = (double)vm.Precio;
                 hambu.IdClasificacion = vm.IdClasificacion;
 
                 menuRepository.Update(hambu);
@@ -189,7 +189,7 @@ namespace Neatburguer.Areas.Admin.Controllers
         public IActionResult Eliminar(int id)
         {
             var hambu = menuRepository.Get(id);
-            if(hambu != null)
+            if (hambu != null)
             {
                 var vm = new EliminarHambuViewModel
                 {
@@ -205,13 +205,13 @@ namespace Neatburguer.Areas.Admin.Controllers
         public IActionResult Eliminar(EliminarHambuViewModel vm)
         {
             var hambu = menuRepository.Get(vm.Id);
-            if(hambu == null)
+            if (hambu == null)
             {
                 return RedirectToAction("Index", "Menu", new { area = "Admin" });
             }
             menuRepository.Delete(vm.Id);
             var ruta = $"wwwroot/hamburguesas/{vm.Id}.png";
-            if(System.IO.File.Exists(ruta))
+            if (System.IO.File.Exists(ruta))
             {
                 System.IO.File.Delete(ruta);
             }
@@ -219,5 +219,74 @@ namespace Neatburguer.Areas.Admin.Controllers
 
         }
 
+        public IActionResult AgregarPromo(int id)
+        {
+            var p = menuRepository.Get(id);
+            if (p == null)
+                return RedirectToAction("Index", "Menu", new { area = "Admin" });
+            else
+            {
+                var vm = new AggPromocionViewModel
+                {
+                    Id = p.Id,
+                    Nombre = p.Nombre,
+                    Precio = (decimal)p.Precio,
+                    PrecioDePromocion = (decimal?)p.PrecioPromocion ?? 0
+                };
+                return View(vm);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AgregarPromo(AggPromocionViewModel vm)
+        {
+            if (vm.PrecioDePromocion == 0)
+            {
+                ModelState.AddModelError("", "Necesita escribir el precio de la promoción");
+            }
+            if (ModelState.IsValid)
+            {
+                var hambu = menuRepository.Get(vm.Id);
+                if (hambu == null)
+                    return RedirectToAction("Index", "Menu", new { area = "Admin" });
+                hambu.PrecioPromocion = (double?)vm.PrecioDePromocion;
+                menuRepository.Update(hambu);
+                return RedirectToAction("Index", "Menu", new { area = "Admin" });
+            }
+            return View(vm);
+        }
+
+        public IActionResult EliminarPromo(int Id)
+        {
+            var p = menuRepository.Get(Id);
+            if (p == null)
+                return RedirectToAction("Index", "Menu", new { area = "Admin" });
+            else
+            {
+                AggPromocionViewModel vm = new()
+                {
+                    Id = p.Id,
+                    Nombre = p.Nombre,
+                    Precio = (decimal)p.Precio,
+                    PrecioDePromocion = (decimal)p.PrecioPromocion
+                };
+                return View(vm);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult EliminarPromo(AggPromocionViewModel vm)
+        {
+            if(ModelState.IsValid)
+            {
+                var hambu = menuRepository.Get(vm.Id);
+                if(hambu == null)
+                    return RedirectToAction("Index", "Menu", new { area = "Admin" });
+                hambu.PrecioPromocion = null; //quitar la promo y mandar cambios
+                menuRepository.Update(hambu);
+                return RedirectToAction("Index", "Menu", new { area = "Admin" });
+            }
+            return View(vm);
+        }
     }
 }

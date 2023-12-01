@@ -1,14 +1,16 @@
-﻿
+﻿@model Neatburguer.Models.ViewModels.PromocionesViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Promociones";
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/Layout.cshtml";
 }
 
-<section class="menu1">
-    <img src="hamburguesas/1.png" />
+
+@* <section class="menu1">
+    <img src="~/hamburguesas/@(Model.id).png" asp-append-version />
     <div class="datos">
         <h3>
-            <del>$110.99</del>
+            <del>@Model.Promociones.</del>
             <b>$100.99</b>
         </h3>
         <h2>CUARTO DE LIBRA CON QUESO</h2>
@@ -19,3 +21,4 @@
         <a href="promociones.html">&gt;</a>
     </span>
 </section>
+ *@

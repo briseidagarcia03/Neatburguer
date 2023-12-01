@@ -13,7 +13,17 @@
             <div>
                 <img src="~/hamburguesas/@(i.Id).png" />
                 <h1>@i.Nombre</h1>
-                <h2><del>@i.PrecioPromocion.ToString("C")</del><br />@i.Precio.ToString("C")</h2>
+                <h2>
+                    @if(i.PrecioPromocion > 0)
+                    {
+                        <del>@i.Precio.ToString("C")</del>
+
+                        <br />
+                        @i.PrecioPromocion.ToString("C")
+                    }
+                    else
+                     @i.Precio.ToString("C")
+                    </h2>
                 <p>
                     @i.Descripcion
                 </p>
@@ -21,7 +31,15 @@
                 <span class="acciones">
                     <a href="~/Admin/menu/editar/@i.Id">Editar</a>
                     <a href="~/Admin/menu/eliminar/@i.Id">Eliminar</a>
-                    <a href="quitarpromocion.html">Quitar promoción</a>
+                    @if(i.PrecioPromocion > 0)
+                    {
+                        <a href="~/Admin/menu/eliminarpromo/@i.Id">Quitar promoción</a>
+                    }
+                    else
+                    {
+                        <a href="~/Admin/menu/agregarpromo/@i.Id">Agregar promoción</a>
+                    }
+                  
 
                 </span>
             </div>
