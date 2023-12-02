@@ -26,7 +26,7 @@ namespace Neatburguer.Areas.Admin.Controllers
                 Descripcion = x.Descripción,
                 Precio = (decimal)x.Precio,
                 PrecioPromocion = (decimal)(x.PrecioPromocion ?? 0),
-                Clasificacion = x.IdClasificacionNavigation.Nombre
+                Clasificacion = x.IdClasificacionNavigation.Nombre,
             }).GroupBy(x => x.Clasificacion);
             return View(vm);
         }

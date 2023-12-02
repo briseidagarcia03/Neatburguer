@@ -1,24 +1,29 @@
 ﻿@model Neatburguer.Models.ViewModels.PromocionesViewModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Promociones";
     Layout = "~/Views/Shared/Layout.cshtml";
 }
 
+<section class="menu1">
+    <img src="~/hamburguesas/@(Model.Promociones.ElementAt(Model.PrimerHambuMostrada).Id).png" />
+        <div class="datos">
+            <h3>
+               <del>@String.Format("{0:C}", Model.Promociones.ElementAt(Model.PrimerHambuMostrada).Precio)</del>
+               <b>@String.Format("{0:C}", Model.Promociones.ElementAt(Model.PrimerHambuMostrada).PrecioDePromocion)</b>
+            </h3>
+            <h2>@Model.Promociones.ElementAt(Model.PrimerHambuMostrada).Nombre</h2>
+            <p>@Model.Promociones.ElementAt(Model.PrimerHambuMostrada).Descripcion</p>
+         </div>
+         <span>
+             @if (Model.PrimerHambuMostrada > 0)
+             {
+                 <a href="~/Promociones/Index?id=@(Model.PrimerHambuMostrada - 1)">&lt;</a>
+             }
 
-@* <section class="menu1">
-    <img src="~/hamburguesas/@(Model.id).png" asp-append-version />
-    <div class="datos">
-        <h3>
-            <del>@Model.Promociones.</del>
-            <b>$100.99</b>
-        </h3>
-        <h2>CUARTO DE LIBRA CON QUESO</h2>
-        <p>Un cuarto de libra de carne de res con dos rebanas de queso, cebolla, pepinillos, mostaza y una porción de tomate, todo en un pan con ajonjolí.</p>
-    </div>
-    <span>
-        <a href="promociones.html">&lt;</a>
-        <a href="promociones.html">&gt;</a>
-    </span>
+             @if (Model.PrimerHambuMostrada < Model.Promociones.Count() - 1)
+             {
+                 <a href="~/Promociones/Index?id=@(Model.PrimerHambuMostrada + 1)">&gt;</a>
+             }
+          </span>
 </section>
- *@
+    

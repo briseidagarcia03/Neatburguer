@@ -21,11 +21,12 @@ namespace Neatburguer.Controllers
             //hambuguesa predimentada por si no hay escogido una 
             var hambu = new ModelHamburguesas
             {
-                Id = 13,
+                Id = 0,
                 Nombre = "",
                 Descripcion = "Escoge tu hamburguesa",
                 Precio = 0,
-                Clasificacion = ""
+                Clasificacion = "",
+   
             };
 
             //todas las hamburguesas en lista y agrupadas
